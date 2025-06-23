@@ -34,6 +34,7 @@ body {
     color: white;
     text-align: left;
     text-decoration: none;
+    background: var(--dark-color)
 }
 
 .header-content h1 {
