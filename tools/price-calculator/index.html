@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARK Price Calculator</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>
+                <i class="fas fa-dinosaur"></i> ARK Price Calculator
+            </h1>
+            <p class="subtitle">Calculateur de prix pour les créatures apprivoisées</p>
+        </header>
+
+        <main class="calculator-container">
+            <div class="form-section">
+                <div class="input-group">
+                    <label for="category"><i class="fas fa-list"></i> Catégorie</label>
+                    <select id="category" class="form-select">
+                        <option value="">-- Sélectionnez --</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="dino"><i class="fas fa-paw"></i> Créature</label>
+                    <select id="dino" class="form-select" disabled>
+                        <option value="">-- Choisissez d'abord une catégorie --</option>
+                    </select>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="level"><i class="fas fa-level-up-alt"></i> Niveau</label>
+                        <input type="number" id="level" class="form-input" min="1" placeholder="150">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="mutations"><i class="fas fa-dna"></i> Mutations</label>
+                        <input type="number" id="mutations" class="form-input" min="0" value="0">
+                    </div>
+                </div>
+
+                <div class="radio-group">
+                    <p><i class="fas fa-venus-mars"></i> Sexe</p>
+                    <div class="radio-options">
+                        <label class="radio-label">
+                            <input type="radio" name="sex" value="male" checked>
+                            <span class="radio-custom"></span>
+                            Mâle
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="sex" value="female">
+                            <span class="radio-custom"></span>
+                            Femelle (+10%)
+                        </label>
+                    </div>
+                </div>
+
+                <button id="calculate-btn" class="calculate-btn">
+                    <i class="fas fa-calculator"></i> Calculer
+                </button>
+            </div>
+
+            <div id="results" class="results-section hidden">
+                <h2><i class="fas fa-poll"></i> Résultats</h2>
+                
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">Créature</div>
+                        <div id="result-dino" class="result-value">-</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-label">Prix de base</div>
+                        <div id="result-base-price" class="result-value">-</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-label">Niveau</div>
+                        <div id="result-level" class="result-value">-</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-label">Sexe</div>
+                        <div id="result-sex" class="result-value">-</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-label">Mutations</div>
+                        <div id="result-mutations" class="result-value">-</div>
+                    </div>
+                </div>
+
+                <div class="calculation-details">
+                    <h3><i class="fas fa-calculator"></i> Détails du calcul</h3>
+                    
+                    <div class="detail-item">
+                        <span>Niveau + 15% (A):</span>
+                        <span id="result-a">0%</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span>Bonus sexe (B):</span>
+                        <span id="result-b">0%</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span>Mutations ×2 (C):</span>
+                        <span id="result-c">0%</span>
+                    </div>
+                    
+                    <div class="detail-item total">
+                        <span>Total augmentation:</span>
+                        <span id="result-total-increase">0%</span>
+                    </div>
+                </div>
+
+                <div class="final-price">
+                    <span>Prix final:</span>
+                    <span id="result-final-price">0</span>
+                </div>
+
+                <button id="reset-btn" class="reset-btn">
+                    <i class="fas fa-redo"></i> Nouveau calcul
+                </button>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>ARK Price Calculator v1.2</p>
+            <p>Ember Group ©2025</p>
+        </footer>
+    </div>
+
+    <script src="scripts/dinos-data.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
