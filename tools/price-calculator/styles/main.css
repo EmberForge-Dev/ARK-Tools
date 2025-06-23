@@ -47,6 +47,8 @@ body {
     justify-content: center;
     gap: 10px;
     text-decoration: none;
+    position: relative;
+    left: 20px;
 }
 
 .home-button:hover {
