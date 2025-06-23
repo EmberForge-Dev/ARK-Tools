@@ -46,10 +46,11 @@ body {
     align-items: center;
     justify-content: center;
     gap: 10px;
+    text-decoration: none;
 }
 
 .home-button:hover {
-    color:var(--dark-color);
+    background-color: #2980b9;
 }
 
 .header-content h1 {
