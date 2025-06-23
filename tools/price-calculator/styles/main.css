@@ -31,14 +31,14 @@ body {
 }
 
 .home-button {
-    width: 65%;
+    width: 40%;
     padding: 14px;
     background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 6px;
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 100;
     cursor: pointer;
     margin-top: 20px;
     transition: background-color 0.3s;
