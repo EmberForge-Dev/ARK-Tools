@@ -1,180 +1,157 @@
-// Données complètes des créatures avec leurs stats de base
-const dinosData = {
-    "Rex": { baseHealth: 1100, baseMelee: 100 },
-    "Spino": { baseHealth: 850, baseMelee: 32 },
-    "Therizinosaurus": { baseHealth: 850, baseMelee: 30 },
-    "Giganotosaurus": { baseHealth: 80000, baseMelee: 60 },
-    "Argentavis": { baseHealth: 800, baseMelee: 20 },
-    "Raptor": { baseHealth: 325, baseMelee: 15 },
-    "Thylacoleo": { baseHealth: 725, baseMelee: 35 },
-    "Megalosaurus": { baseHealth: 800, baseMelee: 35 },
-    "Yutyrannus": { baseHealth: 1300, baseMelee: 35 },
-    "Shadowmane": { baseHealth: 1100, baseMelee: 40 }
-};
+import { dinosBaseStats } from './data/dinos-base-stats.js';
+import { dinosMaturation } from './data/dinos-maturation.js';
 
-// Temps de maturation par créature (en heures)
-const maturationTimes = {
-    "Rex": 4.5,
-    "Spino": 4,
-    "Therizinosaurus": 3.5,
-    "Giganotosaurus": 9,
-    "Argentavis": 2,
-    "Raptor": 1.5,
-    "Thylacoleo": 3,
-    "Megalosaurus": 3,
-    "Yutyrannus": 4,
-    "Shadowmane": 4
-};
-
-document.addEventListener('DOMContentLoaded', function() {
-    const dinoSelect = document.getElementById('dino-select');
-    const calculateBtn = document.getElementById('calculate-btn');
-    const resultsSection = document.getElementById('results-section');
-    
-    // Remplir la liste des créatures
-    function populateDinoList() {
-        dinoSelect.innerHTML = '<option value="">Sélectionnez une créature</option>';
-        
-        Object.keys(dinosData).sort().forEach(dino => {
-            const option = document.createElement('option');
-            option.value = dino;
-            option.textContent = dino;
-            dinoSelect.appendChild(option);
-        });
+class BreedingCalculator {
+    constructor() {
+        this.initElements();
+        this.initEvents();
+        this.populateDinoList();
     }
-    
-    // Calculer les projections de reproduction
-    function calculateBreeding() {
-        const selectedDino = dinoSelect.value;
-        if (!selectedDino) {
-            alert("Veuillez sélectionner une créature");
-            return;
+
+    initElements() {
+        this.dinoSelect = document.getElementById('dino-select');
+        this.calculateBtn = document.getElementById('calculate-btn');
+        this.resultsSection = document.getElementById('results-section');
+        // Ajouter d'autres éléments DOM nécessaires...
+    }
+
+    initEvents() {
+        this.dinoSelect.addEventListener('change', () => this.updateBaseStats());
+        this.calculateBtn.addEventListener('click', () => this.calculate());
+    }
+
+    populateDinoList() {
+        this.dinoSelect.innerHTML = '<option value="">Sélectionnez une créature</option>';
+        
+        Object.keys(dinosBaseStats)
+            .sort()
+            .forEach(dino => {
+                const option = new Option(dino, dino);
+                this.dinoSelect.add(option);
+            });
+    }
+
+    updateBaseStats() {
+        const dino = this.dinoSelect.value;
+        if (dino && dinosBaseStats[dino]) {
+            document.getElementById('melee-male').placeholder = dinosBaseStats[dino].melee;
+            document.getElementById('melee-female').placeholder = dinosBaseStats[dino].melee;
+            document.getElementById('health-male').placeholder = dinosBaseStats[dino].health;
+            document.getElementById('health-female').placeholder = dinosBaseStats[dino].health;
         }
-        
-        // Récupérer les valeurs des inputs
-        const meleeMale = parseInt(document.getElementById('melee-male').value) || 0;
-        const meleeFemale = parseInt(document.getElementById('melee-female').value) || 0;
-        const healthMale = parseInt(document.getElementById('health-male').value) || 0;
-        const healthFemale = parseInt(document.getElementById('health-female').value) || 0;
-        const currentMutations = parseInt(document.getElementById('mutation-count').value) || 0;
-        const targetStat = document.getElementById('target-stat').value;
-        const targetValue = parseInt(document.getElementById('target-value').value) || 0;
-        
-        // Validations
-        if ((meleeMale <= 0 && meleeFemale <= 0) || (healthMale <= 0 && healthFemale <= 0)) {
-            alert("Veuillez entrer des stats valides pour au moins un parent");
-            return;
+    }
+
+    calculate() {
+        try {
+            const inputs = this.getInputValues();
+            this.validateInputs(inputs);
+            
+            const results = this.calculateResults(inputs);
+            this.displayResults(results);
+            
+        } catch (error) {
+            alert(error.message);
         }
-        
-        if (targetValue <= 0) {
-            alert("Veuillez entrer une valeur cible valide");
-            return;
+    }
+
+    getInputValues() {
+        return {
+            dino: this.dinoSelect.value,
+            meleeMale: parseInt(document.getElementById('melee-male').value) || 0,
+            meleeFemale: parseInt(document.getElementById('melee-female').value) || 0,
+            healthMale: parseInt(document.getElementById('health-male').value) || 0,
+            healthFemale: parseInt(document.getElementById('health-female').value) || 0,
+            currentMutations: parseInt(document.getElementById('mutation-count').value) || 0,
+            targetStat: document.getElementById('target-stat').value,
+            targetValue: parseInt(document.getElementById('target-value').value) || 0
+        };
+    }
+
+    validateInputs(inputs) {
+        if (!inputs.dino) throw new Error("Sélectionnez une créature");
+        if (!inputs.targetValue) throw new Error("Entrez une valeur cible valide");
+        if (inputs.meleeMale <= 0 && inputs.meleeFemale <= 0 && 
+            inputs.healthMale <= 0 && inputs.healthFemale <= 0) {
+            throw new Error("Entrez des stats valides pour au moins un parent");
         }
+    }
+
+    calculateResults(inputs) {
+        const baseStats = dinosBaseStats[inputs.dino];
+        const maturationTime = dinosMaturation[inputs.dino] || 4;
         
-        // Calculs de base
-        const baseStats = dinosData[selectedDino];
-        const bestMelee = Math.max(meleeMale, meleeFemale, baseStats.baseMelee);
-        const bestHealth = Math.max(healthMale, healthFemale, baseStats.baseHealth);
+        // Calcul des meilleures stats
+        const bestMelee = Math.max(inputs.meleeMale, inputs.meleeFemale, baseStats.melee);
+        const bestHealth = Math.max(inputs.healthMale, inputs.healthFemale, baseStats.health);
         
-        // Calcul des générations nécessaires
         let generations = 0;
-        let estimatedMutations = currentMutations;
         let finalMelee = bestMelee;
         let finalHealth = bestHealth;
-        
-        if (targetStat === 'melee') {
-            if (targetValue <= bestMelee) {
-                generations = 0;
-                finalMelee = bestMelee;
-            } else {
-                generations = Math.ceil((targetValue - bestMelee) / 2);
-                estimatedMutations = currentMutations + generations;
-                finalMelee = bestMelee + (generations * 2);
-            }
+
+        if (inputs.targetStat === 'melee' && inputs.targetValue > bestMelee) {
+            generations = Math.ceil((inputs.targetValue - bestMelee) / 2);
+            finalMelee = bestMelee + (generations * 2);
         } 
-        else if (targetStat === 'health') {
-            if (targetValue <= bestHealth) {
-                generations = 0;
-                finalHealth = bestHealth;
-            } else {
-                const healthPerMutation = baseStats.baseHealth * 0.05;
-                generations = Math.ceil((targetValue - bestHealth) / healthPerMutation);
-                estimatedMutations = currentMutations + generations;
-                finalHealth = bestHealth + (generations * healthPerMutation);
-            }
+        else if (inputs.targetStat === 'health' && inputs.targetValue > bestHealth) {
+            const healthPerMutation = baseStats.health * 0.05;
+            generations = Math.ceil((inputs.targetValue - bestHealth) / healthPerMutation);
+            finalHealth = bestHealth + (generations * healthPerMutation);
         }
-        
-        // Estimation du temps
-        const maturationTime = maturationTimes[selectedDino] || 4;
+
         const totalHours = generations * maturationTime;
-        const totalDays = (totalHours / 24).toFixed(1);
+        const meleeDiff = (finalMelee - baseStats.melee) / 2;
+        const healthDiff = (finalHealth - baseStats.health) / (baseStats.health * 0.05);
         
-        // Estimation du niveau
-        const meleeDiff = (finalMelee - baseStats.baseMelee) / 2;
-        const healthDiff = (finalHealth - baseStats.baseHealth) / (baseStats.baseHealth * 0.05);
-        const estimatedLevel = Math.floor(1 + meleeDiff + healthDiff);
-        
-        // Affichage des résultats
-        document.getElementById('generations-needed').textContent = generations;
-        document.getElementById('estimated-mutations').textContent = estimatedMutations;
-        document.getElementById('total-time').textContent = `${totalHours} heures (${totalDays} jours)`;
-        document.getElementById('final-melee').textContent = Math.floor(finalMelee);
-        document.getElementById('final-health').textContent = Math.floor(finalHealth);
-        document.getElementById('estimated-level').textContent = estimatedLevel;
-        
-        // Génération des conseils
-        generateTips(selectedDino, generations, estimatedMutations);
-        
-        // Afficher la section résultats
-        resultsSection.classList.remove('hidden');
+        return {
+            generations,
+            mutations: inputs.currentMutations + generations,
+            totalTime: `${totalHours} heures (${(totalHours/24).toFixed(1)} jours)`,
+            finalMelee: Math.floor(finalMelee),
+            finalHealth: Math.floor(finalHealth),
+            estimatedLevel: Math.floor(1 + meleeDiff + healthDiff),
+            dino: inputs.dino
+        };
     }
-    
-    // Générer des conseils personnalisés
-    function generateTips(dino, generations, mutations) {
+
+    displayResults(results) {
+        document.getElementById('generations-needed').textContent = results.generations;
+        document.getElementById('estimated-mutations').textContent = results.mutations;
+        document.getElementById('total-time').textContent = results.totalTime;
+        document.getElementById('final-melee').textContent = results.finalMelee;
+        document.getElementById('final-health').textContent = results.finalHealth;
+        document.getElementById('estimated-level').textContent = results.estimatedLevel;
+        
+        this.generateTips(results);
+        this.resultsSection.classList.remove('hidden');
+    }
+
+    generateTips(results) {
         const tipsList = document.getElementById('tips-list');
         tipsList.innerHTML = '';
         
         const tips = [
-            `Utilisez des ${dino} avec les stats les plus élevées comme base`,
-            "Élevez séparément les stats de mêlée et santé pour plus d'efficacité",
-            "Marquez vos lignées avec des couleurs différentes pour les suivre facilement"
+            `Priorisez les ${results.dino} avec les stats les plus élevées`,
+            "Utilisez des incubateurs pour gérer plusieurs générations",
+            "Marquez les mutations avec des couleurs différentes"
         ];
         
-        if (generations > 15) {
-            tips.unshift("Cherchez des partenaires avec de meilleures stats de base pour réduire le nombre de générations");
+        if (results.generations > 15) {
+            tips.unshift("Cherchez des partenaires avec de meilleures stats de base");
         }
         
-        if (mutations > 15) {
-            tips.push("Attention au cap des 20/20 mutations qui réduit les chances de nouvelles mutations");
+        if (results.mutations > 15) {
+            tips.push("Gérez attentivement le cap des 20/20 mutations");
         }
-        
-        if (maturationTimes[dino] > 5) {
-            tips.push(`Les ${dino} ont un temps de maturation long (${maturationTimes[dino]}h), prévoyez plusieurs incubateurs`);
-        }
-        
+
         tips.forEach(tip => {
             const li = document.createElement('li');
             li.textContent = tip;
             tipsList.appendChild(li);
         });
     }
-    
-    // Mettre à jour les placeholders avec les stats de base
-    function updateBaseStats() {
-        const selectedDino = dinoSelect.value;
-        if (selectedDino && dinosData[selectedDino]) {
-            const base = dinosData[selectedDino];
-            document.getElementById('melee-male').placeholder = base.baseMelee;
-            document.getElementById('melee-female').placeholder = base.baseMelee;
-            document.getElementById('health-male').placeholder = base.baseHealth;
-            document.getElementById('health-female').placeholder = base.baseHealth;
-        }
-    }
-    
-    // Initialisation
-    populateDinoList();
-    
-    // Événements
-    dinoSelect.addEventListener('change', updateBaseStats);
-    calculateBtn.addEventListener('click', calculateBreeding);
+}
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', () => {
+    new BreedingCalculator();
 });
