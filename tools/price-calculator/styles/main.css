@@ -48,6 +48,8 @@ body {
     text-decoration: none;
     position: relative;
     left: 20px;
+    top: 20px;
+    right: 20px;
 }
 
 .home-button:hover {
