@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialisation
+    // Éléments du DOM
     const categorySelect = document.getElementById('category');
     const dinoSelect = document.getElementById('dino');
     const calculateBtn = document.getElementById('calculate-btn');
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isFemale = document.querySelector('input[name="sex"]:checked').value === 'female';
         
         // Calculs
-        const A = level * 0.15;  // level + 15%
+        const A = (level / 10) * 0.25;  // x/10 + 25%
         const B = isFemale ? 10 : 0;
         const C = mutations * 2;
         
