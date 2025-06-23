@@ -32,7 +32,7 @@ body {
 
 .home-button {
     width: 40%;
-    padding: 14px;
+    padding: 5px;
     background-color: var(--primary-color);
     color: white;
     border: none;
