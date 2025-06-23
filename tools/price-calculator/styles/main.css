@@ -34,7 +34,10 @@ body {
     color: white;
     text-align: left;
     text-decoration: none;
-    background: var(--dark-color)
+}
+
+.home-button:hover {
+    color:var(--dark-color);
 }
 
 .header-content h1 {
