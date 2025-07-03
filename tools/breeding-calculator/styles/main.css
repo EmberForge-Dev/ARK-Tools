@@ -1,6 +1,6 @@
 :root {
-    --primary-color: #c48d66;
-    --secondary-color: #c466a2;
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
     --accent-color: #e74c3c;
     --light-color: #ecf0f1;
     --dark-color: #2c3e50;
@@ -28,59 +28,46 @@ body {
     padding: 2rem;
     text-align: center;
     margin-bottom: 2rem;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .home-button {
-    width: fit-content; /* Adjust width to content */
-    padding: 8px 15px; /* More padding for better touch target */
+    width: 20%;
+    padding: 5px;
     background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 6px;
-    font-weight: 600; /* Make text bolder */
+    font-weight: 100;
     cursor: pointer;
     margin-top: 15px;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Add transform for subtle animation */
+    transition: background-color 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     text-decoration: none;
-    position: absolute; /* Position relative to the header */
-    top: 20px; /* Adjust top position */
-    left: 20px; /* Adjust left position */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Add subtle shadow */
+    position: relative;
+    left: 20px;
+    right: 20px;
 }
 
 .home-button:hover {
-    background-color: #a87653; /* Slightly darker primary color */
-    transform: translateY(-2px); /* Lift effect on hover */
+    background-color: #2980b9;
 }
 
-.home-button i {
-    font-size: 1rem; /* Adjust icon size */
-}
-
-.main-header h1 {
+.header-content h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
-    position: relative; /* For centering the title */
-    z-index: 1; /* Ensure title is above button if overlapping */
 }
 
-.main-header .subtitle {
+.header-content .subtitle {
     font-size: 1.1rem;
     opacity: 0.9;
 }
 
 
 .app-container {
-    max-width: 900px; /* Max width for larger screens */
     margin: 0 auto;
-    padding: 20px; /* Add padding for overall container */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -116,24 +103,22 @@ body {
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: border-color 0.3s;
 }
 
 .form-select:focus, .form-input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(196, 141, 102, 0.2); /* Use primary color for focus shadow */
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
 .input-row {
     display: flex;
     gap: 15px;
-    margin-bottom: 20px; /* Add margin to the row */
 }
 
 .input-row .input-group {
     flex: 1;
-    margin-bottom: 0; /* Remove extra margin from individual groups in a row */
 }
 
 .radio-group p {
@@ -195,17 +180,15 @@ body {
     font-weight: 600;
     cursor: pointer;
     margin-top: 20px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .calculate-btn:hover {
-    background-color: #a87653; /* Slightly darker primary color */
-    transform: translateY(-2px);
+    background-color: #2980b9;
 }
 
 .calculate-btn i {
@@ -215,8 +198,6 @@ body {
 .results-section {
     margin-top: 30px;
     animation: fadeIn 0.5s ease;
-    border-top: 1px solid #eee; /* Separator line */
-    padding-top: 20px;
 }
 
 .results-section h2 {
@@ -243,7 +224,6 @@ body {
     border-radius: 8px;
     padding: 15px;
     border-left: 4px solid var(--primary-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .result-label {
@@ -263,7 +243,6 @@ body {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .calculation-details h3 {
@@ -285,18 +264,12 @@ body {
     border-bottom: 1px solid #eee;
 }
 
-.detail-item:last-of-type {
-    border-bottom: none; /* Remove border from last item */
-}
-
 .detail-item.total {
     font-weight: 600;
     border-bottom: none;
     padding-top: 12px;
     margin-top: 5px;
     border-top: 1px solid #ddd;
-    font-size: 1.1rem;
-    color: var(--primary-color);
 }
 
 .final-price {
@@ -307,10 +280,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.5rem; /* Larger font size */
-    font-weight: 700; /* Bolder */
-    margin-bottom: 20px; /* Space before reset button */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-size: 1.3rem;
+    font-weight: 600;
 }
 
 .reset-btn {
@@ -323,18 +294,16 @@ body {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 0; /* Remove margin-top as final-price has margin-bottom */
-    transition: all 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
+    transition: all 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .reset-btn:hover {
     background-color: #e9ecef;
-    transform: translateY(-2px);
 }
 
 .hidden {
@@ -354,48 +323,6 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Custom Message Box Styles */
-.message-box {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    text-align: center;
-    max-width: 350px;
-    width: 90%;
-    border: 2px solid var(--accent-color); /* Highlight with accent color */
-    animation: fadeIn 0.3s ease;
-}
-
-.message-box p {
-    margin-bottom: 20px;
-    font-size: 1.1rem;
-    color: var(--dark-color);
-}
-
-.message-close-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.message-close-btn:hover {
-    background-color: #a87653; /* Slightly darker primary color */
-    transform: translateY(-1px);
-}
-
-
 /* Responsive */
 @media (max-width: 768px) {
     .app-container {
@@ -410,15 +337,6 @@ body {
     .results-grid {
         grid-template-columns: 1fr 1fr;
     }
-
-    .main-header h1 {
-        font-size: 2rem;
-    }
-
-    .home-button {
-        position: static; /* Remove absolute positioning on smaller screens */
-        margin: 15px auto 0; /* Center it below header content */
-    }
 }
 
 @media (max-width: 480px) {
@@ -430,35 +348,4 @@ body {
         flex-direction: column;
         gap: 10px;
     }
-
-    .main-header h1 {
-        font-size: 1.8rem;
-    }
-
-    .main-header .subtitle {
-        font-size: 1rem;
-    }
-}
-
-/* Styles for the new parent stats sections */
-.parent-stats-section {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border: 1px solid #eee;
-}
-
-.parent-stats-section h3 {
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--secondary-color);
-    font-size: 1.3rem;
-}
-
-.parent-stats-section h3 i {
-    color: var(--primary-color);
 }

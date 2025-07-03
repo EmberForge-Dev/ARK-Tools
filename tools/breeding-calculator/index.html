@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARK Breeding Calculator</title>
-    <link rel="stylesheet" href="../breeding-calculator/styles/main.css">
+    <title>ARK Price Calculator</title>
+    <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="app-container">
         <header class="main-header">
             <h1>
-                <i class="fas fa-dinosaur"></i> ARK Breeding Calculator
+                <i class="fas fa-dinosaur"></i> ARK Price Calculator
             </h1>
-            <p class="subtitle">Calculez les statistiques potentielles de vos bébés !</p>
+            <p class="subtitle">Calculateur de prix pour les créatures apprivoisées</p>
             <a href="../../" class="home-button">
-                <i class="fas fa-house"></i> Accueil
+                <i class="fas fa-house"></i> Acceuil
             </a>
         </header>
 
@@ -35,157 +35,96 @@
                     </select>
                 </div>
 
-                <!-- Section pour les statistiques du Parent Mâle -->
-                <div class="parent-stats-section">
-                    <h3><i class="fas fa-mars"></i> Statistiques du Parent Mâle</h3>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="male-health">Santé (HP)</label>
-                            <input type="number" id="male-health" class="form-input" min="0" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label for="male-stamina">Énergie</label>
-                            <input type="number" id="male-stamina" class="form-input" min="0" value="0">
-                        </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="level"><i class="fas fa-level-up-alt"></i> Niveau</label>
+                        <input type="number" id="level" class="form-input" min="1" placeholder="150">
                     </div>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="male-oxygen">Oxygène</label>
-                            <input type="number" id="male-oxygen" class="form-input" min="0" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label for="male-food">Nourriture</label>
-                            <input type="number" id="male-food" class="form-input" min="0" value="0">
-                        </div>
-                    </div>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="male-weight">Poids</label>
-                            <input type="number" id="male-weight" class="form-input" min="0" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label for="male-melee">Dégâts Mêlée</label>
-                            <input type="number" id="male-melee" class="form-input" min="0" value="0">
-                        </div>
-                    </div>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="male-speed">Vitesse</label>
-                            <input type="number" id="male-speed" class="form-input" min="0" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label for="male-mutations">Mutations (Total)</label>
-                            <input type="number" id="male-mutations" class="form-input" min="0" value="0">
-                        </div>
+
+                    <div class="input-group">
+                        <label for="mutations"><i class="fas fa-dna"></i> Mutations</label>
+                        <input type="number" id="mutations" class="form-input" min="0" value="0">
                     </div>
                 </div>
 
-                <!-- Section pour les statistiques du Parent Femelle -->
-                <div class="parent-stats-section">
-                    <h3><i class="fas fa-venus"></i> Statistiques du Parent Femelle</h3>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="female-health">Santé (HP)</label>
-                            <input type="number" id="female-health" class="form-input" min="0" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label for="female-stamina">Énergie</label>
-                            <input type="number" id="female-stamina" class="form-input" min="0" value="0">
-                        </div>
-                    </div>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="female-oxygen">Oxygène</label>
-                            <input type="number" id="female-oxygen" class="form-input" min="0" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label for="female-food">Nourriture</label>
-                            <input type="number" id="female-food" class="form-input" min="0" value="0">
-                        </div>
-                    </div>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="female-weight">Poids</label>
-                            <input type="number" id="female-weight" class="form-input" min="0" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label for="female-melee">Dégâts Mêlée</label>
-                            <input type="number" id="female-melee" class="form-input" min="0" value="0">
-                        </div>
-                    </div>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="female-speed">Vitesse</label>
-                            <input type="number" id="female-speed" class="form-input" min="0" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label for="female-mutations">Mutations (Total)</label>
-                            <input type="number" id="female-mutations" class="form-input" min="0" value="0">
-                        </div>
+                <div class="radio-group">
+                    <p><i class="fas fa-venus-mars"></i> Sexe</p>
+                    <div class="radio-options">
+                        <label class="radio-label">
+                            <input type="radio" name="sex" value="male" checked>
+                            <span class="radio-custom"></span>
+                            Mâle
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="sex" value="female">
+                            <span class="radio-custom"></span>
+                            Femelle (+10%)
+                        </label>
                     </div>
                 </div>
 
                 <button id="calculate-btn" class="calculate-btn">
-                    <i class="fas fa-calculator"></i> Calculer les Statistiques
+                    <i class="fas fa-calculator"></i> Calculer
                 </button>
             </div>
 
-            <!-- Custom Message Box -->
-            <div id="message-box" class="message-box hidden">
-                <p id="message-content"></p>
-                <button id="message-close-btn" class="message-close-btn">OK</button>
-            </div>
-
             <div id="results" class="results-section hidden">
-                <h2><i class="fas fa-egg"></i> Statistiques du Bébé Potentiel</h2>
+                <h2><i class="fas fa-poll"></i> Résultats</h2>
                 
                 <div class="results-grid">
                     <div class="result-card">
                         <div class="result-label">Créature</div>
                         <div id="result-dino" class="result-value">-</div>
                     </div>
+                    
                     <div class="result-card">
-                        <div class="result-label">Santé (HP)</div>
-                        <div id="result-health" class="result-value">-</div>
+                        <div class="result-label">Prix de base</div>
+                        <div id="result-base-price" class="result-value">-</div>
                     </div>
+                    
                     <div class="result-card">
-                        <div class="result-label">Énergie</div>
-                        <div id="result-stamina" class="result-value">-</div>
+                        <div class="result-label">Niveau</div>
+                        <div id="result-level" class="result-value">-</div>
                     </div>
+                    
                     <div class="result-card">
-                        <div class="result-label">Oxygène</div>
-                        <div id="result-oxygen" class="result-value">-</div>
+                        <div class="result-label">Sexe</div>
+                        <div id="result-sex" class="result-value">-</div>
                     </div>
+                    
                     <div class="result-card">
-                        <div class="result-label">Nourriture</div>
-                        <div id="result-food" class="result-value">-</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-label">Poids</div>
-                        <div id="result-weight" class="result-value">-</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-label">Dégâts Mêlée</div>
-                        <div id="result-melee" class="result-value">-</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-label">Vitesse</div>
-                        <div id="result-speed" class="result-value">-</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-label">Mutations Totales</div>
-                        <div id="result-total-mutations" class="result-value">-</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-label">Niveau Potentiel</div>
-                        <div id="result-potential-level" class="result-value">-</div>
+                        <div class="result-label">Mutations</div>
+                        <div id="result-mutations" class="result-value">-</div>
                     </div>
                 </div>
 
                 <div class="calculation-details">
-                    <h3><i class="fas fa-info-circle"></i> Notes sur l'héritage</h3>
-                    <p>Le bébé a 55% de chances d'hériter de la statistique la plus élevée de ses parents et 45% de chances d'hériter de la statistique la plus basse. Les mutations ajoutent +2 points à une statistique aléatoire (ou à une statistique ciblée si vous les gérez manuellement).</p>
-                    <p>Le "Niveau Potentiel" est la somme des points de statistiques hérités et des points de mutation.</p>
+                    <h3><i class="fas fa-calculator"></i> Détails du calcul</h3>
+                    
+                    <div class="detail-item">
+                        <span>Niveau + 15% (A):</span>
+                        <span id="result-a">0%</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span>Bonus sexe (B):</span>
+                        <span id="result-b">0%</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span>Mutations ×2 (C):</span>
+                        <span id="result-c">0%</span>
+                    </div>
+                    
+                    <div class="detail-item total">
+                        <span>Total augmentation:</span>
+                        <span id="result-total-increase">0%</span>
+                    </div>
+                </div>
+
+                <div class="final-price">
+                    <span>Prix final:</span>
+                    <span id="result-final-price">0</span>
                 </div>
 
                 <button id="reset-btn" class="reset-btn">
@@ -195,12 +134,12 @@
         </main>
 
         <footer class="app-footer">
-            <p>ARK Breeding Calculator v1.0</p>
+            <p>ARK Price Calculator v1.2</p>
             <p>Ember Group ©2025</p>
         </footer>
     </div>
 
-    <script src="../breeding-calculator/scripts/dinos-data.js"></script>
-    <script src="../breeding-calculator/scripts/app.js"></script>
+    <script src="scripts/dinos-data.js"></script>
+    <script src="scripts/app.js"></script>
 </body>
 </html>
