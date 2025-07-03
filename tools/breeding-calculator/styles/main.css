@@ -439,3 +439,26 @@ body {
         font-size: 1rem;
     }
 }
+
+/* Styles for the new parent stats sections */
+.parent-stats-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+}
+
+.parent-stats-section h3 {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--secondary-color);
+    font-size: 1.3rem;
+}
+
+.parent-stats-section h3 i {
+    color: var(--primary-color);
+}

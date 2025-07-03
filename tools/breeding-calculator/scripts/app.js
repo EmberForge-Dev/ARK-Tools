@@ -2,16 +2,13 @@
 
 /**
  * @fileoverview Main JavaScript logic for the ARK Breeding Calculator.
- * Handles UI interactions, data loading, calculations, and result display.
+ * Handles UI interactions, data loading, stat inheritance calculations, and result display.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     // Get references to DOM elements
     const categorySelect = document.getElementById('category');
     const dinoSelect = document.getElementById('dino');
-    const levelInput = document.getElementById('level');
-    const mutationsInput = document.getElementById('mutations');
-    const sexRadios = document.querySelectorAll('input[name="sex"]');
     const calculateBtn = document.getElementById('calculate-btn');
     const resetBtn = document.getElementById('reset-btn');
     const resultsSection = document.getElementById('results');
@@ -21,17 +18,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageContent = document.getElementById('message-content');
     const messageCloseBtn = document.getElementById('message-close-btn');
 
+    // Stat input fields for Male Parent
+    const maleHealthInput = document.getElementById('male-health');
+    const maleStaminaInput = document.getElementById('male-stamina');
+    const maleOxygenInput = document.getElementById('male-oxygen');
+    const maleFoodInput = document.getElementById('male-food');
+    const maleWeightInput = document.getElementById('male-weight');
+    const maleMeleeInput = document.getElementById('male-melee');
+    const maleSpeedInput = document.getElementById('male-speed');
+    const maleMutationsInput = document.getElementById('male-mutations');
+
+    // Stat input fields for Female Parent
+    const femaleHealthInput = document.getElementById('female-health');
+    const femaleStaminaInput = document.getElementById('female-stamina');
+    const femaleOxygenInput = document.getElementById('female-oxygen');
+    const femaleFoodInput = document.getElementById('female-food');
+    const femaleWeightInput = document.getElementById('female-weight');
+    const femaleMeleeInput = document.getElementById('female-melee');
+    const femaleSpeedInput = document.getElementById('female-speed');
+    const femaleMutationsInput = document.getElementById('female-mutations');
+
     // Result display elements
     const resultDino = document.getElementById('result-dino');
-    const resultBasePrice = document.getElementById('result-base-price');
-    const resultLevel = document.getElementById('result-level');
-    const resultSex = document.getElementById('result-sex');
-    const resultMutations = document.getElementById('result-mutations');
-    const resultA = document.getElementById('result-a');
-    const resultB = document.getElementById('result-b');
-    const resultC = document.getElementById('result-c');
-    const resultTotalIncrease = document.getElementById('result-total-increase');
-    const resultFinalPrice = document.getElementById('result-final-price');
+    const resultHealth = document.getElementById('result-health');
+    const resultStamina = document.getElementById('result-stamina');
+    const resultOxygen = document.getElementById('result-oxygen');
+    const resultFood = document.getElementById('result-food');
+    const resultWeight = document.getElementById('result-weight');
+    const resultMelee = document.getElementById('result-melee');
+    const resultSpeed = document.getElementById('result-speed');
+    const resultTotalMutations = document.getElementById('result-total-mutations');
+    const resultPotentialLevel = document.getElementById('result-potential-level');
 
     /**
      * Displays a custom message box with the given message.
@@ -85,8 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const option = document.createElement('option');
                 option.value = dino.name;
                 option.textContent = dino.name;
-                // Store base price in a data attribute for easy retrieval during calculation
-                option.dataset.basePrice = dino.basePrice;
                 dinoSelect.appendChild(option);
             });
             dinoSelect.disabled = false; // Enable the dropdown
@@ -97,57 +112,89 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Performs the breeding calculation based on user inputs and displays the results.
-     * Includes input validation using the custom message box.
+     * Gets the stats from the input fields for a given parent type (male/female).
+     * @param {string} prefix - 'male' or 'female'
+     * @returns {object} An object containing the parent's stats and mutations.
      */
-    function calculateBreeding() {
-        // Get selected dino details
+    function getParentStats(prefix) {
+        return {
+            health: parseInt(document.getElementById(`${prefix}-health`).value) || 0,
+            stamina: parseInt(document.getElementById(`${prefix}-stamina`).value) || 0,
+            oxygen: parseInt(document.getElementById(`${prefix}-oxygen`).value) || 0,
+            food: parseInt(document.getElementById(`${prefix}-food`).value) || 0,
+            weight: parseInt(document.getElementById(`${prefix}-weight`).value) || 0,
+            melee: parseInt(document.getElementById(`${prefix}-melee`).value) || 0,
+            speed: parseInt(document.getElementById(`${prefix}-speed`).value) || 0,
+            mutations: parseInt(document.getElementById(`${prefix}-mutations`).value) || 0
+        };
+    }
+
+    /**
+     * Performs the breeding calculation based on parent stats and displays the results.
+     * This simulates ARK's stat inheritance (55% higher, 45% lower) and mutation effects.
+     */
+    function calculateBreedingStats() {
         const selectedDinoOption = dinoSelect.options[dinoSelect.selectedIndex];
         const dinoName = selectedDinoOption ? selectedDinoOption.value : '';
-        const basePrice = selectedDinoOption ? parseFloat(selectedDinoOption.dataset.basePrice) : 0;
-        
-        // Get input values, converting to numbers
-        const level = parseInt(levelInput.value);
-        const mutations = parseInt(mutationsInput.value);
-        const sex = document.querySelector('input[name="sex"]:checked').value;
 
-        // Input validation
-        if (!dinoName || isNaN(level) || level <= 0 || isNaN(mutations) || mutations < 0) {
-            showMessage('Veuillez sélectionner une créature et entrer des valeurs valides (niveau > 0, mutations >= 0).');
-            return; // Stop function execution if validation fails
+        if (!dinoName) {
+            showMessage('Veuillez sélectionner une créature.');
+            return;
         }
 
-        // --- Calculation Logic ---
-        // A: Level contribution to total increase. Each level point contributes 0.15% to the total increase.
-        const levelIncrease = level * 0.15;
-        
-        // B: Sex bonus. Females provide an additional 10% increase.
-        const sexBonus = (sex === 'female') ? 10 : 0;
-        
-        // C: Mutations contribution. Each mutation contributes 2% to the total increase.
-        const mutationIncrease = mutations * 2;
+        const maleStats = getParentStats('male');
+        const femaleStats = getParentStats('female');
 
-        // Sum of all percentage increases
-        const totalIncreasePercentage = levelIncrease + sexBonus + mutationIncrease;
-        
-        // Calculate the final price: Base Price * (1 + Total Increase / 100)
-        const finalPrice = basePrice * (1 + totalIncreasePercentage / 100);
+        // Validate all stat inputs are non-negative
+        const allStats = [
+            maleStats.health, maleStats.stamina, maleStats.oxygen, maleStats.food, maleStats.weight, maleStats.melee, maleStats.speed, maleStats.mutations,
+            femaleStats.health, femaleStats.stamina, femaleStats.oxygen, femaleStats.food, femaleStats.weight, femaleStats.melee, femaleStats.speed, femaleStats.mutations
+        ];
+
+        for (const stat of allStats) {
+            if (isNaN(stat) || stat < 0) {
+                showMessage('Veuillez entrer des nombres valides et non négatifs pour toutes les statistiques et mutations.');
+                return;
+            }
+        }
+
+        // --- Stat Inheritance Logic ---
+        // In ARK, a baby inherits the higher stat from either parent 55% of the time,
+        // and the lower stat 45% of the time. For a calculator, we often assume
+        // the best-case scenario (inheriting the higher stat) or show the range.
+        // For simplicity, we'll show the *potential* highest inherited stats.
+        const potentialBabyStats = {
+            health: Math.max(maleStats.health, femaleStats.health),
+            stamina: Math.max(maleStats.stamina, femaleStats.stamina),
+            oxygen: Math.max(maleStats.oxygen, femaleStats.oxygen),
+            food: Math.max(maleStats.food, femaleStats.food),
+            weight: Math.max(maleStats.weight, femaleStats.weight),
+            melee: Math.max(maleStats.melee, femaleStats.melee),
+            speed: Math.max(maleStats.speed, femaleStats.speed)
+        };
+
+        // --- Mutation Logic ---
+        // Mutations add +2 points to a random stat. They also increase the mutation counter.
+        // Here, we'll just sum the mutations from both parents.
+        // Note: ARK's mutation system is complex (e.g., mutation counter caps at 20/20 per side).
+        // For this calculator, we'll simply sum them.
+        const totalMutations = maleStats.mutations + femaleStats.mutations;
+
+        // Calculate potential level (sum of all inherited stats + mutations)
+        // Each stat point contributes to the total level.
+        const potentialLevel = Object.values(potentialBabyStats).reduce((sum, stat) => sum + stat, 0) + (totalMutations * 2); // Each mutation adds 2 points to a stat, thus 2 levels.
 
         // --- Display Results ---
         resultDino.textContent = dinoName;
-        // Format base price with French locale for currency display
-        resultBasePrice.textContent = `${basePrice.toLocaleString('fr-FR')} $`;
-        resultLevel.textContent = level;
-        resultSex.textContent = (sex === 'male') ? 'Mâle' : 'Femelle';
-        resultMutations.textContent = mutations;
-
-        // Display individual calculation components, formatted to two decimal places
-        resultA.textContent = `${levelIncrease.toFixed(2)}%`;
-        resultB.textContent = `${sexBonus.toFixed(2)}%`;
-        resultC.textContent = `${mutationIncrease.toFixed(2)}%`;
-        resultTotalIncrease.textContent = `${totalIncreasePercentage.toFixed(2)}%`;
-        // Format final price with French locale for currency display
-        resultFinalPrice.textContent = `${finalPrice.toFixed(2).toLocaleString('fr-FR')} $`;
+        resultHealth.textContent = potentialBabyStats.health;
+        resultStamina.textContent = potentialBabyStats.stamina;
+        resultOxygen.textContent = potentialBabyStats.oxygen;
+        resultFood.textContent = potentialBabyStats.food;
+        resultWeight.textContent = potentialBabyStats.weight;
+        resultMelee.textContent = potentialBabyStats.melee;
+        resultSpeed.textContent = potentialBabyStats.speed;
+        resultTotalMutations.textContent = totalMutations;
+        resultPotentialLevel.textContent = potentialLevel;
 
         // Show the results section
         resultsSection.classList.remove('hidden');
@@ -159,10 +206,26 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetCalculator() {
         categorySelect.value = ''; // Reset category dropdown
         populateDinos(); // Reset dino dropdown to initial state
-        levelInput.value = ''; // Clear level input
-        mutationsInput.value = '0'; // Reset mutations to 0
-        // Set sex radio button back to 'Mâle'
-        document.querySelector('input[name="sex"][value="male"]').checked = true;
+        
+        // Reset all parent stat inputs to 0
+        maleHealthInput.value = '0';
+        maleStaminaInput.value = '0';
+        maleOxygenInput.value = '0';
+        maleFoodInput.value = '0';
+        maleWeightInput.value = '0';
+        maleMeleeInput.value = '0';
+        maleSpeedInput.value = '0';
+        maleMutationsInput.value = '0';
+
+        femaleHealthInput.value = '0';
+        femaleStaminaInput.value = '0';
+        femaleOxygenInput.value = '0';
+        femaleFoodInput.value = '0';
+        femaleWeightInput.value = '0';
+        femaleMeleeInput.value = '0';
+        femaleSpeedInput.value = '0';
+        femaleMutationsInput.value = '0';
+
         resultsSection.classList.add('hidden'); // Hide results section
         hideMessage(); // Ensure message box is hidden
     }
@@ -171,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Listen for changes on the category dropdown to update the dino dropdown
     categorySelect.addEventListener('change', populateDinos);
     // Listen for clicks on the calculate button to perform calculations
-    calculateBtn.addEventListener('click', calculateBreeding);
+    calculateBtn.addEventListener('click', calculateBreedingStats);
     // Listen for clicks on the reset button to clear the form
     resetBtn.addEventListener('click', resetCalculator);
     // Listen for clicks on the message box close button to hide it
